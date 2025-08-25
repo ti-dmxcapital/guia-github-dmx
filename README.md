@@ -1,4 +1,4 @@
-# Guia de Fluxo de Trabalho Git para Programadores Juniores
+# Guia de Fluxo de Trabalho Git para Programadores
 
 Este guia apresenta o fluxo básico de trabalho com Git e GitHub que todos os desenvolvedores da empresa devem seguir. É especialmente direcionado para programadores juniores e inclui explicações detalhadas de cada etapa.
 
