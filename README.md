@@ -11,7 +11,8 @@ Este guia apresenta o fluxo básico de trabalho com Git e GitHub que todos os de
 5. [Como Fazer um Pull Request](#como-fazer-um-pull-request)
 6. [Como Testar uma Branch de Colega](#como-testar-uma-branch-de-colega)
 7. [Problemas Comuns e Soluções](#problemas-comuns-e-soluções)
-8. [Boas Práticas](#boas-práticas)
+8. [Problema 6: Erro de Autenticação no GitHub](#problema-6-erro-de-autenticação-no-github)
+9. [Boas Práticas](#boas-práticas)
 
 ## 🎯 Conceitos Básicos
 
@@ -424,6 +425,48 @@ echo "arquivo-indesejado.txt" >> .gitignore
 git add .gitignore
 git commit -m "Adiciona arquivo ao gitignore"
 ```
+
+
+### Problema 6: Erro de Autenticação no GitHub
+**Sintoma:** Git pede usuário e senha toda vez, ou erro 403/401 ao fazer push/pull
+
+**Solução: Configurar Cache de Credenciais**
+
+Para não ter que digitar o token toda vez:
+
+**Linux/macOS:**
+```bash
+git config --global credential.helper store
+```
+
+**Windows:**
+```bash
+git config --global credential.helper manager
+```
+
+**Como usar:**
+1. Certifique-se de que está usando URL HTTPS:
+   ```bash
+   # Verificar a URL atual
+   git remote -v
+
+   # Se estiver usando SSH (git@github.com), mude para HTTPS
+   git remote set-url origin https://github.com/empresa/nome-do-projeto.git
+   ```
+
+2. Na próxima vez que fizer push/pull, use seu **Personal Access Token** como senha
+3. Depois do primeiro uso, o Git salva o token e usa automaticamente
+
+**Dica importante:**
+> 👉 Não precisa apagar nada. Basta garantir que está usando a URL HTTPS e colocar o token no lugar da senha.
+
+**Para criar um Personal Access Token:**
+1. Vá para GitHub → Settings → Developer settings → Personal access tokens
+2. Clique em "Generate new token"
+3. Selecione as permissões necessárias (repo, workflow, etc.)
+4. Copie o token gerado (você só verá uma vez!)
+5. Use este token como senha quando o Git pedir
+
 
 ## ✨ Boas Práticas
 
