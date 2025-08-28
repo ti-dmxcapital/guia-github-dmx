@@ -11,8 +11,7 @@ Este guia apresenta o fluxo básico de trabalho com Git e GitHub que todos os de
 5. [Como Fazer um Pull Request](#como-fazer-um-pull-request)
 6. [Como Testar uma Branch de Colega](#como-testar-uma-branch-de-colega)
 7. [Problemas Comuns e Soluções](#problemas-comuns-e-soluções)
-8. [Problema 6: Erro de Autenticação no GitHub](#problema-6-erro-de-autenticação-no-github)
-9. [Boas Práticas](#boas-práticas)
+8. [Boas Práticas](#boas-práticas)
 
 ## 🎯 Conceitos Básicos
 
@@ -195,155 +194,77 @@ Cole aqui capturas de tela das alterações visuais
 
 ## 🧪 Como Testar uma Branch de Colega
 
-Quando um colega abre um Pull Request, é importante testar o código dele localmente antes de aprovar. Aqui está como fazer isso:
+Quando um colega abre um Pull Request, é importante testar o código dele localmente antes de aprovar.
 
-### Cenário 1: Testar um Pull Request Existente
-
-**Situação:** Seu colega criou um PR e você quer testar o código dele na sua máquina.
+### Como Baixar e Testar a Branch
 
 ```bash
-# 1. Primeiro, atualize suas informações sobre branches remotas
+# 1. Atualize informações sobre branches remotas
 git fetch origin
 
-# 2. Veja todas as branches disponíveis (incluindo as remotas)
-git branch -a
-
-# 3. Crie uma cópia local da branch do seu colega
+# 2. Crie uma cópia local da branch do colega
 git checkout -b feature/branch-do-colega origin/feature/branch-do-colega
-```
 
-**O que está acontecendo?**
-- `git fetch`: Baixa informações sobre todas as branches do repositório remoto
-- `git branch -a`: Lista todas as branches (locais e remotas)
-- `git checkout -b`: Cria uma nova branch local baseada na branch remota
-
-### Cenário 2: Testar Rapidamente (Sem Criar Branch Local)
-
-Se você só quer dar uma olhada rápida no código:
-
-```bash
-# Baixe as informações mais recentes
-git fetch origin
-
-# Mude diretamente para a branch remota (modo "detached HEAD")
-git checkout origin/feature/branch-do-colega
-
-# ⚠️ ATENÇÃO: Neste modo, não faça commits! É só para testar.
-```
-
-### Cenário 3: Atualizar uma Branch que Você Já Está Testando
-
-Se o colega fez novas alterações na branch dele:
-
-```bash
-# Na branch que você está testando
+# 3. Se o colega fez novas alterações, atualize
 git pull origin feature/branch-do-colega
+```
+
+**Para teste rápido (sem criar branch local):**
+```bash
+git fetch origin
+git checkout origin/feature/branch-do-colega
+# ⚠️ ATENÇÃO: Neste modo, não faça commits! É só para testar.
 ```
 
 ### Como Testar o Código
 
-Após fazer checkout da branch do colega:
-
 ```bash
 # 1. Instale dependências (se necessário)
-npm install
-# ou
-pip install -r requirements.txt
+npm install  # ou pip install -r requirements.txt
 
 # 2. Execute os testes
-npm test
-# ou
-python -m pytest
+npm test  # ou python -m pytest
 
-# 3. Execute a aplicação
-npm start
-# ou
-python app.py
-
-# 4. Teste manualmente as funcionalidades descritas no PR
+# 3. Execute a aplicação e teste manualmente
+npm start  # ou python app.py
 ```
 
-### Voltando para Sua Branch de Trabalho
-
-Após terminar os testes:
+### Voltando para Sua Branch
 
 ```bash
-# Volte para sua branch principal
-git checkout main
-
-# Ou volte para sua branch de trabalho
+# Volte para sua branch de trabalho
 git checkout feature/minha-branch
 
-# Se não precisar mais da branch de teste, delete ela
+# Delete a branch de teste (opcional)
 git branch -d feature/branch-do-colega
 ```
 
 ### Dicas para Review de Código
 
-**O que verificar ao testar:**
-- [ ] O código funciona conforme descrito no PR
-- [ ] Não há erros no console/terminal
-- [ ] A funcionalidade não quebra outras partes do sistema
-- [ ] O código segue os padrões da equipe
-- [ ] Os testes passam
+**O que verificar:**
+- [ ] Funciona conforme descrito no PR
+- [ ] Sem erros no console/terminal
+- [ ] Não quebra outras funcionalidades
+- [ ] Segue padrões da equipe
 
-**Como dar feedback:**
-1. Vá para o GitHub
-2. Entre no Pull Request
-3. Clique em "Files changed"
-4. Clique no "+" ao lado da linha para comentar
-5. Escreva feedback construtivo
-
-**Exemplos de bom feedback:**
-- ✅ "Funciona bem! Só uma sugestão: poderia adicionar validação aqui?"
-- ✅ "Testei e está funcionando. Encontrei um pequeno bug quando..."
-- ❌ "Está errado"
-- ❌ "Não gostei"
-
-### Comandos Úteis para Review
-
+**Comandos úteis:**
 ```bash
-# Ver diferenças entre sua branch e a do colega
+# Ver diferenças e histórico
 git diff main..feature/branch-do-colega
-
-# Ver apenas os arquivos que foram modificados
-git diff --name-only main..feature/branch-do-colega
-
-# Ver o histórico de commits da branch
 git log main..feature/branch-do-colega --oneline
-
-# Ver informações sobre a branch remota
-git show-branch origin/feature/branch-do-colega
 ```
 
-### Problemas Comuns ao Testar Branches de Colegas
+**Como dar feedback no GitHub:**
+- ✅ "Funciona bem! Sugestão: adicionar validação aqui?"
+- ❌ "Está errado" (seja específico!)
 
-**Problema:** "Branch não encontrada"
-```bash
-# Solução: Atualize as informações remotas
-git fetch origin
-git branch -a  # Verifique se a branch aparece agora
-```
+### Problemas Comuns ao Testar
 
-**Problema:** "Conflitos ao fazer checkout"
-```bash
-# Solução: Salve suas alterações primeiro
-git stash  # Guarda suas alterações temporariamente
-git checkout origin/feature/branch-do-colega
-# Depois de testar:
-git checkout sua-branch
-git stash pop  # Recupera suas alterações
-```
+**Branch não encontrada:** `git fetch origin && git branch -a`
 
-**Problema:** "Dependências diferentes"
-```bash
-# Solução: Reinstale dependências na branch do colega
-npm install  # ou pip install, etc.
-# Teste
-# Depois volte para sua branch e reinstale novamente
-git checkout sua-branch
-npm install
-```
+**Conflitos ao fazer checkout:** Use `git stash` antes e `git stash pop` depois
+
+**Dependências diferentes:** Reinstale dependências na branch do colega
 
 ## 🚨 Problemas Comuns e Soluções
 
@@ -440,44 +361,25 @@ git commit -m "Adiciona arquivo ao gitignore"
 
 
 ### Problema 6: Erro de Autenticação no GitHub
-**Sintoma:** Git pede usuário e senha toda vez, ou erro 403/401 ao fazer push/pull
+**Sintoma:** Git pede usuário e senha toda vez, ou erro 403/401
 
-**Solução: Configurar Cache de Credenciais**
-
-Para não ter que digitar o token toda vez:
-
-**Linux/macOS:**
+**Solução:**
 ```bash
-git config --global credential.helper store
+# Configure cache de credenciais
+git config --global credential.helper store  # Linux/macOS
+git config --global credential.helper manager  # Windows
+
+# Verifique se está usando HTTPS
+git remote -v
+# Se necessário, mude para HTTPS:
+git remote set-url origin https://github.com/empresa/nome-do-projeto.git
 ```
 
-**Windows:**
-```bash
-git config --global credential.helper manager
-```
-
-**Como usar:**
-1. Certifique-se de que está usando URL HTTPS:
-   ```bash
-   # Verificar a URL atual
-   git remote -v
-
-   # Se estiver usando SSH (git@github.com), mude para HTTPS
-   git remote set-url origin https://github.com/empresa/nome-do-projeto.git
-   ```
-
-2. Na próxima vez que fizer push/pull, use seu **Personal Access Token** como senha
-3. Depois do primeiro uso, o Git salva o token e usa automaticamente
-
-**Dica importante:**
-> 👉 Não precisa apagar nada. Basta garantir que está usando a URL HTTPS e colocar o token no lugar da senha.
-
-**Para criar um Personal Access Token:**
-1. Vá para GitHub → Settings → Developer settings → Personal access tokens
-2. Clique em "Generate new token"
-3. Selecione as permissões necessárias (repo, workflow, etc.)
-4. Copie o token gerado (você só verá uma vez!)
-5. Use este token como senha quando o Git pedir
+**Personal Access Token:**
+1. GitHub → Settings → Developer settings → Personal access tokens
+2. "Generate new token" → Selecione permissões (repo, workflow)
+3. Use o token como senha quando o Git pedir
+4. Após primeiro uso, o Git salva automaticamente
 
 
 ## ✨ Boas Práticas
@@ -518,24 +420,18 @@ Procure ajuda quando:
 
 **Lembre-se:** É melhor pedir ajuda cedo do que quebrar o repositório!
 
-## 📚 Comandos de Emergência
+### Problema 7: Comandos de Emergência
 
-### Desfazer Alterações Locais
+**Desfazer alterações não commitadas:**
 ```bash
-# Descartar alterações não commitadas
-git checkout -- nome-do-arquivo
+git checkout -- nome-do-arquivo  # arquivo específico
 git checkout .  # todos os arquivos
-
-# Voltar ao último commit
-git reset --hard HEAD
+git reset --hard HEAD  # voltar ao último commit
 ```
 
-### Recuperar Branch Deletada
+**Recuperar branch deletada:**
 ```bash
-# Ver commits recentes
-git reflog
-
-# Recuperar branch
+git reflog  # ver commits recentes
 git checkout -b nome-da-branch SHA-do-commit
 ```
 
