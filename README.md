@@ -402,15 +402,27 @@ git commit --amend --no-edit
 
 **Solução:**
 ```bash
-# Na sua branch de trabalho
+# 1. Se você tem trabalho não commitado, guarde temporariamente
+git stash
+
+# 2. Atualize o main
 git checkout main
 git pull origin main
+
+# 3. Volte para sua branch e faça rebase
 git checkout sua-branch
 git rebase main
 
-# Se der conflito, resolva e continue
+# 4. Se der conflito, resolva e continue
 git rebase --continue
+
+# 5. Recupere seu trabalho guardado
+git stash pop
 ```
+
+**O que está acontecendo?**
+- `git stash`: Guarda suas alterações não commitadas temporariamente
+- `git stash pop`: Recupera as alterações guardadas após o rebase
 
 ### Problema 5: Arquivo Não Deveria Ser Commitado
 **Sintoma:** Commitou arquivo por engano (.env, node_modules, etc.)
